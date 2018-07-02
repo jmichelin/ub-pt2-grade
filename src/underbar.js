@@ -218,32 +218,20 @@
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
     /* START SOLUTION */
-    let isFalsy = function(item){ 
-       let falsies = [false, null, undefined, 0, NaN, '', "" ];
-       _.each(collection, function(item){
-         _.each(falsies, function(falsyEle){
-          if(item !== falsyEle){
-            return false;
-          }
-         });
-      });
-    };
-
-    return _.reduce(collection, function(iterator, item){
-        if(_.every(collection, isFalsy)){
-          return false;
-        } else if (!iterator) {
+   let falsies = [false, 0, null, NaN, undefined, '', ""];
+    return _.reduce(collection, function(acc, item){
+        if(!acc || _.contains(falsies, iterator(item))){
           return false;
         } else {
           return true;
         } 
       }, true);
-
+  };
     /* END SOLUTION */
     // Input - collection, iterator which determines what to searach for
     // Output - a boolean - all or nothing
     // Constraints - passes by default for empty collection
-  };
+
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
