@@ -3,12 +3,12 @@
 
   window._ = {};
 
-  // Returns whatever value is passed as the argument. This function doesn't
+    // Returns whatever value is passed as the argument. This function doesn't
   // seem very useful, but remember it--if a function needs to provide an
   // iterator when the user does not pass one in, this will be handy.
   _.identity = function(val) {
     /* START SOLUTION */
-
+    return val;
     /* END SOLUTION */
   };
 
@@ -34,16 +34,19 @@
   // Return an array of the first n elements of an array. If n is undefined,
   // return just the first element.
   _.first = function(array, n) {
-    /* START SOLUTION */
-
-    /* END SOLUTION */
+    return n === undefined ? array[0] : array.slice(0, n);
   };
 
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
     /* START SOLUTION */
-
+    // When the input n not is provided, we return a single value from the array,
+    // rather than an array of values
+    if (n === undefined) {
+      return array[array.length - 1];
+    }
+    return array.slice(Math.max(0, array.length - n));
     /* END SOLUTION */
   };
 
@@ -54,7 +57,15 @@
   // iterator function over each item in the input collection.
   _.each = function(collection, iterator) {
     /* START SOLUTION */
-
+    if (Array.isArray(collection)) {
+      for (var i = 0; i < collection.length; i++) {
+        iterator(collection[i], i, collection);
+      }
+    } else {
+      for (var prop in collection) {
+        iterator(collection[prop], prop, collection);
+      }
+    }
     /* END SOLUTION */
   };
 
@@ -64,15 +75,27 @@
     // TIP: Here's an example of a function that needs to iterate, which we've
     // implemented for you. Instead of using a standard `for` loop, though,
     // it uses the iteration helper `each`, which you will need to write.
-    /* START SOLUTION */
+    var result = -1;
 
-    /* END SOLUTION */
+    _.each(array, function(item, index) {
+      if (item === target && result === -1) {
+        result = index;
+      }
+    });
+
+    return result;
   };
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
     /* START SOLUTION */
+    var result = [];
 
+    _.each(collection, function(val) {
+      test(val) && result.push(val);
+    });
+
+    return result;
     /* END SOLUTION */
   };
 
@@ -81,14 +104,29 @@
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
     /* START SOLUTION */
-
+    return _.filter(collection, function(val) {
+      return !test(val);
+    });
     /* END SOLUTION */
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
     /* START SOLUTION */
+    var hash = {};
 
+    iterator = (isSorted && iterator) || _.identity;
+
+    _.each(array, function(val) {
+      var transformed = iterator(val);
+      if (hash[transformed] === undefined) {
+        hash[transformed] = val;
+      }
+    });
+
+    return _.map(hash, function(value) {
+      return value;
+    });
     /* END SOLUTION */
   };
 
@@ -99,7 +137,13 @@
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
     /* START SOLUTION */
+    var results = [];
 
+    _.each(collection, function(item, index, collection) {
+      results.push(iterator(item, index, collection));
+    });
+
+    return results;
     /* END SOLUTION */
   };
 
@@ -113,9 +157,12 @@
   // a certain property in it. E.g. take an array of people and return
   // an array of just their ages
   _.pluck = function(collection, key) {
-    /* START SOLUTION */
-
-    /* END SOLUTION */
+    // TIP: map is really handy when you want to transform an array of
+    // values into a new array of values. _.pluck() is solved for you
+    // as an example of this.
+    return _.map(collection, function(item){
+      return item[key];
+    });
   };
 
   // Reduces an array or object to a single value by repetitively calling
@@ -140,7 +187,18 @@
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
     /* START SOLUTION */
+    var initializing = arguments.length === 2;
 
+    _.each(collection, function(val) {
+      if (initializing) {
+        initializing = false;
+        accumulator = val;
+      } else {
+        accumulator = iterator(accumulator, val);
+      }
+    });
+
+    return accumulator;
     /* END SOLUTION */
   };
 
