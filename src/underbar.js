@@ -232,16 +232,24 @@
     // Output - a boolean - all or nothing
     // Constraints - passes by default for empty collection
 
-
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
-    // TIP: There's a very clever way to re-use every() here.
-    /* START SOLUTION */
-
-    /* END SOLUTION */
+    let args = [...argument];
+    //check to see if there is an iterator
+    if (args.length === 1) {
+      //if not return true
+      return true;
+      //if there is an iterator, go through the collection, and [check to see if *any* of them pass a truth test]
+    } else if(!_.every(collection, iterator)){ // how does this <--- do this ^? _.each(collection, function(ele, i){ iterator(ele) === true, return true});
+      //if any of them do, immediately
+      return true;
+    //otherwise
+    } else {
+      return false;
+    }
   };
-
+ /* END SOLUTION */
 
   /**
    * OBJECTS
