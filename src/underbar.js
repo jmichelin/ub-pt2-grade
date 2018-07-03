@@ -283,27 +283,31 @@
   //   }); // obj1 now contains key1, key2, key3 and bla
 
   _.extend = function(destination, source) {
-          
-          for(var i = 0; i < arguments.length; i++){
-            Object.assign(destination, arguments[i]);
-          }
-          return destination;
-     
+
+    for(var i = 0; i < arguments.length; i++){
+      Object.assign(destination, arguments[i]);
+    }
+    return destination;
   };
 
-var extended = _.extend({ x: 'x' }, { a: 'a', x: 2 }, { a: 1 });
-expect(extended).to.eql({ x: 2, a: 1 });
-
-  // Like extend, but doesn't ever overwrite a key that already
-  // exists in obj
-
-  _.defaults = function(obj) {
+    _.defaults = function(destination, ...sources) {
     /* START SOLUTION */
-
+      //look at each key in destination object
+      // for arrays
+      for(let source of sources){
+        //compare that key with each key in each arguments object
+        _.each(source, function(val, key){
+          if(!(key in destination)){
+            // add the key value pair to destination
+           console.log(key);
+           destination[key] = source[key];
+          } 
+        });
+      }
+      return destination;
+    };
+    
     /* END SOLUTION */
-  };
-
-
   /**
    * FUNCTIONS
    * =========
