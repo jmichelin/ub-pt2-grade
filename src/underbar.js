@@ -281,12 +281,10 @@
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
-
   _.extend = function(destination, source) {
-
     for(var i = 0; i < arguments.length; i++){
       Object.assign(destination, arguments[i]);
-    }
+    }    
     return destination;
   };
 
@@ -299,14 +297,13 @@
         _.each(source, function(val, key){
           if(!(key in destination)){
             // add the key value pair to destination
-           console.log(key);
            destination[key] = source[key];
           } 
         });
       }
       return destination;
     };
-    
+
     /* END SOLUTION */
   /**
    * FUNCTIONS
@@ -318,14 +315,20 @@
 
   // Return a function that can be called at most one time. Subsequent calls
   // should return the previously returned value.
-  _.once = function(func) {
+  _.once = function(func) { 
     // TIP: These variables are stored in a "closure scope" (worth researching),
     // so that they'll remain available to the newly-generated function every
     // time it's called.
     /* START SOLUTION */
-
-    /* END SOLUTION */
+    var result;
+    return function() { 
+    if(func) {
+      result = func.apply(this, arguments);
+      func = null;
+    }
+    return result;
   };
+};
 
   // Memorize an expensive function's results by storing them. You may assume
   // that the function only takes primitives as arguments.
