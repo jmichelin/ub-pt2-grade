@@ -219,14 +219,23 @@
     // TIP: Try re-using reduce() here.
     /* START SOLUTION */
    let falsies = [false, 0, null, NaN, undefined, '', ""];
-    return _.reduce(collection, function(acc, item){
-        if(!acc || _.contains(falsies, iterator(item))){
-          return false;
-        } else {
-          return true;
-        } 
-      }, true);
-  };
+   
+   const args = [...arguments];
+
+   if (args.length === 1) {
+    iterator = _.identity;
+  }
+
+  return _.reduce(collection, function(acc, item) {
+      if (!acc || _.contains(falsies, iterator(item))) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    true
+  );
+};
     /* END SOLUTION */
     // Input - collection, iterator which determines what to searach for
     // Output - a boolean - all or nothing
@@ -235,20 +244,23 @@
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
-    let args = [...argument];
+  
     //check to see if there is an iterator
+    const args = [...arguments];
+    let falsies = [false, null, undefined, 0, NaN, '', ''];
+
     if (args.length === 1) {
-      //if not return true
-      return true;
-      //if there is an iterator, go through the collection, and [check to see if *any* of them pass a truth test]
-    } else if(!_.every(collection, iterator)){ // how does this <--- do this ^? _.each(collection, function(ele, i){ iterator(ele) === true, return true});
-      //if any of them do, immediately
-      return true;
-    //otherwise
-    } else {
-      return false;
-    }
-  };
+      iterator = _.identity;
+    } 
+    
+    return _.reduce(collection, function(acc, item) {
+     if (acc || !_.contains(falsies, iterator(item))) {
+       return true;
+     } else {
+       return false;
+     }
+   }, false);
+};
  /* END SOLUTION */
 
   /**
@@ -269,14 +281,22 @@
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
-  _.extend = function(obj) {
-    /* START SOLUTION */
 
-    /* END SOLUTION */
+  _.extend = function(destination, source) {
+          
+          for(var i = 0; i < arguments.length; i++){
+            Object.assign(destination, arguments[i]);
+          }
+          return destination;
+     
   };
+
+var extended = _.extend({ x: 'x' }, { a: 'a', x: 2 }, { a: 1 });
+expect(extended).to.eql({ x: 2, a: 1 });
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
+
   _.defaults = function(obj) {
     /* START SOLUTION */
 
