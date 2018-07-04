@@ -340,10 +340,15 @@
   // instead if possible.
   _.memoize = function(func) {
     var result;
+    var memo= {};
+
     return function() { 
-    if(func) {
-      result = func.apply(this, arguments);
-      func = null;
+      var args = JSON.stringify(arguments);
+    if(args in memo) {
+      result = memo[args];
+    }else {
+      memo[args] = func.apply(this, arguments);
+      result = memo[args];
     }
     return result;
     };
@@ -356,14 +361,11 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
 _.delay = function(func, wait) {
-  let args = func.apply(this, arguments);
-  console.log(args);
-  // setTimeout(func.apply(this, arguments), wait);
+  var args = [...arguments].slice(2);
+  setTimeout(function() {
+    return func.apply(null, args);
+  }, wait);
 };
-
-_.delay(callback, 100, 1, 2);
-clock.tick(100);
-expect(callback).to.have.been.calledWith(1, 2);
 
 
   /**
